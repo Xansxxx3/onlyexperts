@@ -1,11 +1,4 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>User Registration</title>
-</head>
-<body>
+@include('partials.header')
     <h2>User Registration</h2>
     @if ($errors->any())
         <div style="color: red;">
@@ -46,5 +39,4 @@
 
         <button type="submit">Register</button>
     </form>
-</body>
-</html>
+@include('partials.footer')
