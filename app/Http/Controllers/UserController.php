@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Models\User;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Validation\ValidationException;
 
 class UserController extends Controller
 {
@@ -27,6 +28,8 @@ class UserController extends Controller
      */
     public function register(Request $request)
     {
+        
+
         // Validate the user's input
         $request->validate([
             'username' => 'required|string|max:255|unique:users',
@@ -37,6 +40,8 @@ class UserController extends Controller
             'subscriptionType' => 'nullable|string|max:255',
             'accttype' => 'nullable|string|max:255',
         ]);
+        dump($request);
+
 
         // Create a new user record
         $user = new User();
@@ -70,29 +75,65 @@ class UserController extends Controller
      * @return \Illuminate\Http\RedirectResponse
      */
     public function login(Request $request)
-    {
-        // Validate the user's input
-        $credentials = $request->validate([
-            'identifier' => 'required|string',
-            'password' => 'required|string',
-        ]);
-
-        // Check if the identifier is an email or username
-        $field = filter_var($credentials['identifier'], FILTER_VALIDATE_EMAIL) ? 'email' : 'username';
-
-        // Attempt to log the user in using email or username
-        if (Auth::attempt([$field => $credentials['identifier'], 'password' => $credentials['password']])) {
-            $request->session()->regenerate();
-
-            return redirect()->intended('/dashboard'); // Redirect to the intended page after login
+{
+    // Validate the user's input
+         try {
+            $credentials = $request->validate([
+                'email' => 'required|string|email|exists:users,email',
+                'password' => 'required|string',
+            ]);
+        } catch (ValidationException $e) {
+            return response([
+                'message' => 'Invalid Email or Password'
+            ], 404);
         }
-
-        // If login attempt fails, redirect back with error message
-        return back()->withErrors([
-            'identifier' => 'The provided credentials do not match our records.',
-        ]);
+        
+    // Attempt to authenticate the user
+    if (Auth::attempt(['email' => $request->email, 'password' => $request->password])) {
+        // Authentication passed
+        return redirect()->intended('/dashboard'); // Redirect to a dashboard or any other desired route upon successful login
+    } else {
+        // Authentication failed
+        return redirect()->route('login')->with('error', 'Invalid credentials. Please try again.');
     }
+}
+    // public function login(Request $request){
 
+    //     try {
+    //         $credentials = $request->validate([
+    //             'email' => 'required|string|email|exists:users,email',
+    //             'password' => 'required|string',
+    //         ]);
+    //     } catch (ValidationException $e) {
+    //         return response([
+    //             'message' => 'Invalid Email or Password'
+    //         ], 404);
+    //     }
+
+
+    //     if (!Auth::attempt($credentials)) {
+    //         return response([
+    //             'message' => 'Invalid Password of Email'
+    //         ], 404);
+    //     }
+    //     $user = Auth::user();
+    //     $token = $user->createToken('auth-token')->plainTextToken;
+    //     $user->load('shoppingCart');
+
+
+
+    //     return response()->json([ 
+    //         'message'=> 'Authorized',
+    //         'access_token' => $token,
+    //         'token_type' => 'Bearer',
+    //         'username' => $user->username,
+    //         'first_name' => $user->firstname,
+    //         'last_name' => $user->lastname,
+    //         'email' => $user->email,
+    //         'user_id' => $user->id,
+    //         ]);     
+    //     }
+   
     /**
      * Logout the authenticated user.
      *

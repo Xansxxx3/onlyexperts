@@ -2,10 +2,11 @@
 
     <div class="login-container">
         <h2>Login</h2>
-        <form id="login-form" action="#" method="post">
+        <form id="login-form" method="POST" action="{{ route('login') }}">
+            @csrf
             <div class="form-group">
-                <label for="username">Username:</label>
-                <input type="text" id="username" name="username" required>
+                <label for="email">Email:</label>
+                <input type="text" id="email" name="email" required>
             </div>
             <div class="form-group">
                 <label for="password">Password:</label>
