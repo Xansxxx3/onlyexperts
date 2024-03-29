@@ -36,12 +36,13 @@
 
         <label for="password_confirmation">Confirm Password:</label><br>
         <input type="password" id="password_confirmation" name="password_confirmation"><br>
+        
+        <label for="firstname">First Name:</label><br>
+        <input type="firstname" id="firstname" name="firstname" value="{{ old('firstname') }}"><br>
 
-        <label for="subscriptionType">Subscription Status:</label><br>
-        <input type="text" id="subscriptionType" name="subscriptionType" value="{{ old('subscriptionType') }}"><br>
+        <label for="lastname">Last Name:</label><br>
+        <input type="text" id="lastname" name="lastname" value="{{ old('lastname') }}"><br>
 
-        <label for="accttype">Account Type:</label><br>
-        <input type="text" id="accttype" name="accttype" value="{{ old('accttype') }}"><br>
 
         <button type="submit">Register</button>
     </form>

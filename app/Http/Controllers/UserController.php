@@ -31,6 +31,8 @@ class UserController extends Controller
             'username' => 'required|string|max:255|unique:users',
             'email' => 'required|string|email|max:255|unique:users',
             'password' => 'required|string|min:8|confirmed',
+            'password' => 'required|string|max:255',
+            'password' => 'required|string|max:255',
             'subscriptionType' => 'nullable|string|max:255',
             'accttype' => 'nullable|string|max:255',
         ]);
@@ -40,8 +42,10 @@ class UserController extends Controller
         $user->username = $request->username;
         $user->email = $request->email;
         $user->password = Hash::make($request->password);
-        $user->subscriptionType = $request->subscriptionType;
-        $user->accttype = $request->accttype;
+        $user->firstname = $request->firstname;
+        $user->lastname = $request->lastname;
+        $user->subscriptionType = 1;
+        $user->accttype = 1;
         $user->save();
 
         // Redirect the user after successful registration
